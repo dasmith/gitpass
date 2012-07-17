@@ -33,18 +33,21 @@ def find_git_directory(prefix=None):
     for .git and returns that directory or False if none can be found
     """
     if prefix is None:
-        prefix = os.path.dirname(os.path.abspath(__file__))
+        prefix = os.path.dirname(os.path.abspath(os.getcwd()))
     if os.path.isdir(prefix+'/.git'):
         return prefix
     else:
-        prevfix = prefix
         prefix = os.path.abspath(prefix + "/" + os.path.pardir)
-        if prefix == prevfix:
+        if prefix == "/":
             return False
         else:
             return find_git_directory(prefix)
 
 def find_in_gitignore(gitdir, entry):
+    """
+    Returns True iff 'entry' is in the .gitignore file
+    in the 'gitdir' git repository
+    """
     with open(gitdir + "/.gitignore") as f:
         for line in f:
             if line.strip() == entry:
@@ -53,6 +56,9 @@ def find_in_gitignore(gitdir, entry):
 
 
 def ensure_in_gitignore(gitdir, entry):
+    """
+    Stores the file 'entry' in the 'gitdir'/.gitignore file
+    """
     try:
         if find_in_gitignore(gitdir, entry):
             return True
@@ -65,6 +71,10 @@ def ensure_in_gitignore(gitdir, entry):
         f.close()
 
 def save_password(passfile, password):
+    """
+    Creates/overwrites a file 'passfile' to contain contents
+    'password'
+    """
     with open(passfile, 'w') as f:
         f.write("%s\n" % (password,))
         f.close()

@@ -2,7 +2,8 @@
 # Gitpass
 
 An extension of the Python standard library's [getpass](http://docs.python.org/library/getpass.html) module designed for
-(not) committing a password to a Git repository
+(not) committing a password to a Git repository.  By Dustin Smith,
+covered under the [MIT License](http://opensource.org/licenses/mit-license.php)
 
 ## Usage
 
