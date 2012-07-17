@@ -97,7 +97,7 @@ def gitpass(prompt, passfile=None, force_new=False):
             raise IOError 
         with open(passpath) as pf:
             password = pf.read().strip()
-            print "Read password ", password
+            pf.close()
         return password
     except IOError:
         password = raw_input(prompt + ":").strip()
