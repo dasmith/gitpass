@@ -80,27 +80,28 @@ def save_password(passfile, password):
         f.write("%s\n" % (base64.b64encode(password),))
         f.close()
 
-def gitpass(prompt, passfile=None, force_prompt=False):
+def gitpass(prompt, passfile=None, force_new=False):
     """
     This prompts the user with 'prompt' in the terminal and then
     creates a file (named 'passfile' if specified, otherwise based on
     the prompt) to store the password in for the future.
 
-    force_prompt asks the user to enter the password each time.
+    force_new asks the user for a prompt at each time.
     """
+   
     passfile = passfile or re.sub(r'\s', '_', prompt.lower().strip())
     hidden_passfile = ".__%s" % passfile
     gitdir = find_git_directory()
     passpath = gitdir + "/" + hidden_passfile
     try:
-        if force_prompt:
+        if force_new:
             raise IOError 
         with open(passpath) as pf:
             password = base64.b64decode(pf.read().strip())
             pf.close()
         return password
     except IOError:
-        password = raw_input(prompt + ": ").strip()
+        password = getpass.getpass(prompt + ":").strip()
         ensure_in_gitignore(gitdir, hidden_passfile)
         save_password(passpath, password)
         return password
