@@ -26,6 +26,7 @@ import os
 import re
 import logging
 import getpass
+import base64
 
 def find_git_directory(prefix=None):
     """
@@ -76,31 +77,30 @@ def save_password(passfile, password):
     'password'
     """
     with open(passfile, 'w') as f:
-        f.write("%s\n" % (password,))
+        f.write("%s\n" % (base64.b64encode(password),))
         f.close()
 
-def gitpass(prompt, passfile=None, force_new=False):
+def gitpass(prompt, passfile=None, force_prompt=False):
     """
     This prompts the user with 'prompt' in the terminal and then
     creates a file (named 'passfile' if specified, otherwise based on
     the prompt) to store the password in for the future.
 
-    force_new asks the user for a prompt at each time.
+    force_prompt asks the user to enter the password each time.
     """
-   
     passfile = passfile or re.sub(r'\s', '_', prompt.lower().strip())
     hidden_passfile = ".__%s" % passfile
     gitdir = find_git_directory()
     passpath = gitdir + "/" + hidden_passfile
     try:
-        if force_new:
+        if force_prompt:
             raise IOError 
         with open(passpath) as pf:
-            password = pf.read().strip()
+            password = base64.b64decode(pf.read().strip())
             pf.close()
         return password
     except IOError:
-        password = raw_input(prompt + ":").strip()
+        password = raw_input(prompt + ": ").strip()
         ensure_in_gitignore(gitdir, hidden_passfile)
         save_password(passpath, password)
         return password
