@@ -29,7 +29,7 @@ The first time you use this in your git repository, it will:
   1. Prompt you for a password in the terminal
   2. Create a file called `.__aws_password` that contains your password
      in [base64 encoding](http://docs.python.org/library/base64.html)
-  3. Add `.__aws_password` to your `.gitignore` file.  
+  3. Add `.__aws_password` to your `.gitignore` file
 
 The next time you use the password, it will not prompt you again for
 your password.
@@ -40,10 +40,10 @@ your password.
 
  - `passfile`: the name of the file to store the password.  If this is
    not specified, a default filename will be created from the prompt
-(lowercased, removing whitespaces).
+(lowercased and with whitespace removed)
  - `force_prompt`: if True, it forces the user to enter the password
    again, ignoring whatever is in the file
 
 Gitpass is covered under the [MIT
 License](http://opensource.org/licenses/mit-license.php) and was created
-by [Dustin Smith](http://web.media.mit.edu/~dustin/].
+by [Dustin Smith](http://web.media.mit.edu/~dustin/).
