@@ -1,12 +1,14 @@
 
 # Gitpass
 
-*Gitpass is an extension of the Python standard library's [getpass](http://docs.python.org/library/getpass.html), designed for keeping passwords out of your git repository*.
-
+*Gitpass is an extension of the Python standard library's
+[getpass](http://docs.python.org/library/getpass.html), designed for
+keeping passwords out of your git repository and caching them so you
+don't have to repeat yourself.*
 
 Do you have a password, credentials or other information that you don't
 want to commit to your git repository?  Use gitpass as a quick, easy,
-insecure way to prevent a password from appearing on your git
+and insecure way to prevent a password from appearing on your git
 repository, while only having to enter it once.
 
 
