@@ -28,6 +28,7 @@ import logging
 import getpass
 import base64
 
+
 def find_git_directory(prefix=None):
     """
     Traverses the directory starting from 'prefix' (or this file's path)
@@ -35,7 +36,7 @@ def find_git_directory(prefix=None):
     """
     if prefix is None:
         prefix = os.path.dirname(os.path.abspath(os.getcwd()))
-    if os.path.isdir(prefix+'/.git'):
+    if os.path.isdir(prefix + '/.git'):
         return prefix
     else:
         prefix = os.path.abspath(prefix + "/" + os.path.pardir)
@@ -43,6 +44,7 @@ def find_git_directory(prefix=None):
             return False
         else:
             return find_git_directory(prefix)
+
 
 def find_in_gitignore(gitdir, entry):
     """
@@ -69,7 +71,7 @@ def ensure_in_gitignore(gitdir, entry):
     logging.info("Adding %s to .gitignore" % (entry,))
     with open(gitdir + "/.gitignore", 'a') as f:
         f.write("%s\n" % (entry,))
-        f.close()
+
 
 def save_password(passfile, password):
     """
@@ -78,7 +80,7 @@ def save_password(passfile, password):
     """
     with open(passfile, 'w') as f:
         f.write("%s\n" % (base64.b64encode(password),))
-        f.close()
+
 
 def gitpass(prompt, passfile=None, force_new=False):
     """
@@ -88,17 +90,18 @@ def gitpass(prompt, passfile=None, force_new=False):
 
     force_new asks the user for a prompt at each time.
     """
-   
     passfile = passfile or re.sub(r'\s', '_', prompt.lower().strip())
     hidden_passfile = ".__%s" % passfile
     gitdir = find_git_directory()
+    if not gitdir:
+        logging.error("You need to run Gitpass within a git directory.")
+        return False
     passpath = gitdir + "/" + hidden_passfile
     try:
         if force_new:
-            raise IOError 
+            raise IOError
         with open(passpath) as pf:
             password = base64.b64decode(pf.read().strip())
-            pf.close()
         return password
     except IOError:
         password = getpass.getpass(prompt + ":").strip()
