@@ -26,6 +26,7 @@ import os
 import re
 import logging
 import getpass
+import inspect
 import base64
 
 
@@ -92,10 +93,19 @@ def gitpass(prompt, passfile=None, force_new=False):
     """
     passfile = passfile or re.sub(r'\s', '_', prompt.lower().strip())
     hidden_passfile = ".__%s" % passfile
-    gitdir = find_git_directory()
+    # search for the .git file starting from
+    # the path in which the user is executing the script
+    execution_path = os.path.dirname(os.path.abspath(os.getcwd()))
+    # then look starting from the path to where the function was called
+    call_path = os.path.dirname(inspect.stack()[1][1])
+    gitdir = find_git_directory(execution_path)
     if not gitdir:
-        logging.error("You need to run Gitpass within a git directory.")
+        gitdir = find_git_directory(call_path)
+    if not gitdir:
+        logging.error("You need to run Gitpass within a git repository" + \
+                      " or call it from within one.")
         return False
+    # define path to password file
     passpath = gitdir + "/" + hidden_passfile
     try:
         if force_new:
