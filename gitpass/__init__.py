@@ -38,8 +38,9 @@ def find_git_directory(prefix):
     if os.path.isdir(prefix + '/.git'):
         return prefix
     else:
+        old_prefix = prefix
         prefix = os.path.abspath(prefix + "/" + os.path.pardir)
-        if prefix == "/":
+        if prefix == "/" or old_prefix == prefix:
             return False
         else:
             return find_git_directory(prefix)
