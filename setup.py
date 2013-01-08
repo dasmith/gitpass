@@ -4,7 +4,7 @@ from distutils.core import setup
 
 
 setup(name='gitpass',
-      version='0.1.1',
+      version='0.1.2',
       description="Gitpass is an extension of the Python standard library's " \
       + "getpass, designed for keeping passwords out of your git repository.",
       author='Dustin Smith',
