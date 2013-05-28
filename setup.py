@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
+import distribute_setup
 from distutils.core import setup
+distribute_setup.use_setuptools()
 
 
 setup(name='gitpass',
