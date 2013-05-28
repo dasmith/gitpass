@@ -30,18 +30,17 @@ import inspect
 import base64
 
 
-def find_git_directory(prefix=None):
+def find_git_directory(prefix):
     """
     Traverses the directory starting from 'prefix' (or this file's path)
     for .git and returns that directory or False if none can be found
     """
-    if prefix is None:
-        prefix = os.path.dirname(os.path.abspath(os.getcwd()))
     if os.path.isdir(prefix + '/.git'):
         return prefix
     else:
+        old_prefix = prefix
         prefix = os.path.abspath(prefix + "/" + os.path.pardir)
-        if prefix == "/":
+        if prefix == "/" or old_prefix == prefix:
             return False
         else:
             return find_git_directory(prefix)
@@ -95,12 +94,17 @@ def gitpass(prompt, passfile=None, force_new=False):
     hidden_passfile = ".__%s" % passfile
     # search for the .git file starting from
     # the path in which the user is executing the script
-    execution_path = os.path.dirname(os.path.abspath(os.getcwd()))
-    # then look starting from the path to where the function was called
-    call_path = os.path.dirname(inspect.stack()[1][1])
-    gitdir = find_git_directory(execution_path)
-    if not gitdir:
+    try:
+        execution_path = os.path.dirname(os.path.abspath(os.getcwd()))
+        gitdir = find_git_directory(execution_path)
+        if not gitdir: 
+            raise OSError
+    except OSError:
+        # if the user is using ipython's notebook 
+        # then look starting from the path to where the function was called
+        call_path = os.path.dirname(inspect.stack()[1][1])
         gitdir = find_git_directory(call_path)
+
     if not gitdir:
         logging.error("You need to run Gitpass within a git repository" + \
                       " or call it from within one.")
