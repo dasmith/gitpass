@@ -95,7 +95,7 @@ def gitpass(prompt, passfile=None, force_new=False):
     # search for the .git file starting from
     # the path in which the user is executing the script
     try:
-        execution_path = os.path.dirname(os.path.abspath(os.getcwd()))
+        execution_path = os.path.abspath(os.getcwd())
         gitdir = find_git_directory(execution_path)
         if not gitdir: 
             raise OSError
